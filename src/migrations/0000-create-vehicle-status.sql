@@ -1,0 +1,1 @@
+CREATE TYPE vehicle_status AS ENUM('available', 'sold', 'pending');
