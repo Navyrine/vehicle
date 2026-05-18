@@ -1,4 +1,4 @@
-import pg, { Pool } from "pg";
+import pg from "pg";
 import fs, { readdir } from "fs/promises";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -27,9 +27,7 @@ export const connectDB = async () => {
 };
 
 export const createMigrationTable = async () => {
-  const uuid = crypto.randomUUID();
-
-  await createMigration(pool, uuid);
+  await createMigration(pool);
 };
 
 export const getExecutedMigration = async () => {
@@ -42,7 +40,7 @@ export const runMigration = async () => {
   const client = await pool.connect();
 
   try {
-    await createMigration(client);
+    await createMigrationTable();
 
     const migrationPath = path.join(__dirname, "../migrations");
     const files = await fs.readdir(migrationPath);
@@ -52,6 +50,7 @@ export const runMigration = async () => {
       if (!executedMigration.includes(file)) {
         const filePath = path.join(migrationPath, file);
         const sql = await fs.readFile(filePath, "utf-8");
+        const uuid = crypto.randomUUID();
 
         logger.info(`RUNNING MIGRATION FILE ${file}`);
 
@@ -59,7 +58,7 @@ export const runMigration = async () => {
           await client.query("BEGIN");
 
           await client.query(sql);
-          await insertFilename(client, file);
+          await insertFilename(client, uuid, file);
 
           await client.query("COMMIT");
 
