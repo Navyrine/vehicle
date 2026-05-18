@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS vehicle(
     model TEXT,
     year INT,
     mileage TEXT,
-    price DOUBLE,
+    price NUMERIC,
     condition TEXT,
     transmission TEXT,
     fuel_type TEXT,

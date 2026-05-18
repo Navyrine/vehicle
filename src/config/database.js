@@ -62,7 +62,7 @@ export const runMigration = async () => {
 
           await client.query("COMMIT");
 
-          logger.info(`MIGRATION FILE SUCCESS ${file}`);
+          logger.info(`MIGRATION FILE ${file} - SUCCESS`);
         } catch (err) {
           await client.query("ROLLBACK");
           throw err;
