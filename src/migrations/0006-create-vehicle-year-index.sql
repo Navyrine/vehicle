@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_vehicle_year ON vehicle(year);
