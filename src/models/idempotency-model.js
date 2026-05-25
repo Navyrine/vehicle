@@ -17,16 +17,16 @@ export const findByKey = async (db, key) => {
   return result;
 };
 
-export const createKey = async (db, key, requestHash) => {
+export const createKey = async (db, idempotencyId, key, requestHash) => {
   const query = await db.query(
     `
         INSERT INTO idempotency
-        (idempotency_key, request_hash)
+        (idempotency_id, idempotency_key, request_hash)
         VALUES
-        ($1, $2)
+        ($1, $2, $3)
         RETURNING *    
     `,
-    [key, requestHash],
+    [idempotencyId, key, requestHash],
   );
   const result = query.rows;
 

@@ -8,19 +8,16 @@ import {
 } from "../models/idempotency-model.js";
 
 export const idempotencyMiddleware = async (req, res, next) => {
-  const key = req.headers("idempotency-key");
+  const key = req.headers["idempotency-key"];
 
   if (!key) {
     return next(new ResponseError(400, "Idempotency-key required"));
   }
 
   const requestHash = hashRequest(req.body);
-  const client = await pool.connect();
 
   try {
-    await client("BEGIN");
-
-    const existing = await findByKey(client, key);
+    const existing = await findByKey(pool, key);
 
     if (existing) {
       if (existing.request_hash !== requestHash) {
@@ -36,17 +33,14 @@ export const idempotencyMiddleware = async (req, res, next) => {
       return next(new ResponseError(409, "Request still processing"));
     }
 
-    await createKey(client, key, hashRequest);
+    const uuid = crypto.randomUUID();
 
-    req.idempotency = key;
+    await createKey(pool, uuid, key, requestHash);
 
-    await client.query("COMMIT");
+    req.idempotencyKey = key;
 
     next();
   } catch (err) {
-    await client.query("ROLLBACK");
     next(err);
-  } finally {
-    client.release();
   }
 };

@@ -4,6 +4,7 @@ import cors from "cors";
 
 import { requestLogger } from "./middlewares/request-logger.js";
 import { errorMiddleware } from "./middlewares/error-middleware.js";
+import { vehicleRouter } from "./routes/vehicle-route.js";
 
 export const app = express();
 
@@ -18,5 +19,7 @@ app.use(
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(requestLogger);
+
+app.use("/", vehicleRouter);
 
 app.use(errorMiddleware);

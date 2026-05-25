@@ -26,6 +26,10 @@ const start = async () => {
   try {
     await connectDB();
     await runMigration();
+
+    server = app.listen(port, () => {
+      logger.info(`Server running on port ${port}`);
+    });
   } catch (err) {
     logger.error("FAILED TO START APPLICATION", {
       message: err.message,

@@ -2,11 +2,11 @@ import Joi from "joi";
 
 export const addVehicleValidation = Joi.object({
   name: Joi.string().trim().required(),
-  make: Joi.number().trim().required(),
+  make: Joi.string().trim().required(),
   model: Joi.string().trim().required(),
-  year: Joi.number().trim().required(),
+  year: Joi.number().required(),
   mileage: Joi.string().trim().required(),
-  price: Joi.number().trim().required(),
+  price: Joi.number().required(),
   condition: Joi.string().trim().required(),
   transmission: Joi.string().trim().required(),
   fuel_type: Joi.string().trim().required(),
@@ -17,11 +17,11 @@ export const addVehicleValidation = Joi.object({
 
 export const updateVehicleValidation = Joi.object({
   name: Joi.string().trim(),
-  make: Joi.number().trim(),
+  make: Joi.string().trim(),
   model: Joi.string().trim(),
-  year: Joi.number().trim(),
+  year: Joi.number(),
   mileage: Joi.string().trim(),
-  price: Joi.number().trim(),
+  price: Joi.number(),
   condition: Joi.string().trim(),
   transmission: Joi.string().trim(),
   fuel_type: Joi.string().trim(),
