@@ -8,7 +8,8 @@ export const findByKey = async (db, key) => {
         response_body,
         status_code
         FROM idempotency
-        WHERE idempotency_key = $1
+        WHERE TRIM(idempotency_key) = TRIM($1)
+        FOR UPDATE
     `,
     [key],
   );
@@ -33,17 +34,24 @@ export const createKey = async (db, idempotencyId, key, requestHash) => {
   return result;
 };
 
-export const saveResponse = async (db, responseBody, statusCode, key) => {
+export const saveResponse = async (
+  db,
+  responseBody,
+  statusCode,
+  status,
+  key,
+) => {
   const query = await db.query(
     `
         UPDATE idempotency
         SET
         response_body = $1,
-        status_code = $2
-        WHERE idempotency_key = $3
+        status_code = $2,
+        status = $3
+        WHERE idempotency_key = $4
         RETURNING *
     `,
-    [responseBody, statusCode, key],
+    [responseBody, statusCode, status, key],
   );
   const result = query.rows;
 

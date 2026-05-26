@@ -1,6 +1,7 @@
 import Joi from "joi";
 
 export const addVehicleValidation = Joi.object({
+  idempotency_key: Joi.string().required(),
   name: Joi.string().trim().required(),
   make: Joi.string().trim().required(),
   model: Joi.string().trim().required(),
