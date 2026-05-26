@@ -84,9 +84,10 @@ export const presentVehicleByFuelType = async (req, res, next) => {
 
 export const newVehicle = async (req, res, next) => {
   try {
+    const idempotencyKey = req.get("idempotency-key");
     const body = req.body;
 
-    await addVehicle(body);
+    await addVehicle(body, idempotencyKey);
 
     return res.status(201).json({
       status_code: 201,

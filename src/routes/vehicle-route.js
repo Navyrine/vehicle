@@ -1,5 +1,6 @@
 import express from "express";
 
+import { idempotencyMiddleware } from "../middlewares/idempotency-middleware.js";
 import {
   presentVehicle,
   presentVehicleById,
@@ -16,6 +17,6 @@ vehicleRouter.get("/listings", presentVehicle);
 vehicleRouter.get("/filters", presentVehicleByFuelType);
 vehicleRouter.get("/listings/search", presentSearchVehicleByMakePriceYearFuel);
 vehicleRouter.get("/listings/:vehicle_id", presentVehicleById);
-vehicleRouter.post("/listings", newVehicle);
+vehicleRouter.post("/listings", idempotencyMiddleware, newVehicle);
 vehicleRouter.patch("/listings/:vehicle_id", editVehicle);
 vehicleRouter.delete("/listings/:vehicle_id", eraseVehicleData);

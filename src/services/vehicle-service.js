@@ -1,12 +1,7 @@
 import { pool } from "../config/database.js";
 import { ResponseError } from "../error/ResponseError.js";
 import { validation } from "../validations/validator.js";
-import { hashRequest } from "../utils/hash.js";
-import {
-  findByKey,
-  createKey,
-  saveResponse,
-} from "../models/idempotency-model.js";
+import { saveResponse } from "../models/idempotency-model.js";
 import {
   addVehicleValidation,
   updateVehicleValidation,
@@ -82,7 +77,7 @@ export const showVehicleByFuelType = async (fuelType) => {
   return result;
 };
 
-export const addVehicle = async (request) => {
+export const addVehicle = async (request, idempotencyKey) => {
   const client = await pool.connect();
 
   try {
@@ -90,42 +85,6 @@ export const addVehicle = async (request) => {
 
     const vehicle = validation(addVehicleValidation, request);
     const uuid = crypto.randomUUID();
-    const requestHash = hashRequest(vehicle);
-    let existingKey = await findByKey(client, vehicle.idempotency_key);
-
-    if (existingKey) {
-      if (existingKey.request_hash !== requestHash) {
-        throw new ResponseError(
-          409,
-          "Idempotency key use with different request",
-        );
-      }
-
-      if (existingKey.status === "processing") {
-        throw new ResponseError(409, "Request still procressing");
-      }
-
-      return existingKey.response_body;
-    }
-
-    try {
-      await createKey(client, uuid, vehicle.idempotency_key, requestHash);
-    } catch (err) {
-      if (err.code === "23505") {
-        existingKey = await findByKey(client, vehicle.idempotency_key);
-
-        if (existingKey.request_hash !== requestHash) {
-          throw new ResponseError(409, "Idempotency key conflict");
-        }
-
-        if (existingKey.status === "processing") {
-          throw new ResponseError(409, "Request still processing");
-        }
-
-        return existingKey.response_body;
-      }
-      throw err;
-    }
 
     await insertVehicle(
       client,
@@ -149,7 +108,7 @@ export const addVehicle = async (request) => {
       { status_code: 201, message: "Success added vehicle data" },
       201,
       "completed",
-      vehicle.idempotency_key,
+      idempotencyKey,
     );
 
     await client.query("COMMIT");
