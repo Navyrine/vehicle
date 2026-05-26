@@ -104,10 +104,10 @@ export const searchVehicleByMakePriceYearFuel = async (
         FROM vehicle
         WHERE 
         (
-            $1 IS NULL OR $1 = '' OR 
+            $1::text IS NULL OR
             to_tsvector('simple', 
                 coalesce(make, '') || ' ' || coalesce(fuel_type, '')
-            ) @@ plainto_tsquery($1)
+            ) @@ plainto_tsquery($1::text)
         ) AND
         price >= $2 AND
         year >= $3

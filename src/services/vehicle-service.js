@@ -54,7 +54,7 @@ export const showSearchVehicleByMakePriceYearFuel = async (
   price,
   year,
 ) => {
-  makeFuelType = makeFuelType.toLowerCase().trim();
+  makeFuelType = makeFuelType ? makeFuelType.toLowerCase().trim() : null;
 
   const result = await searchVehicleByMakePriceYearFuel(
     pool,

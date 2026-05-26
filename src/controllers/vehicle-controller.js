@@ -50,10 +50,10 @@ export const presentSearchVehicleByMakePriceYearFuel = async (
   next,
 ) => {
   try {
-    let makeFuelType = String(req.query.make_fuel_type);
-    let price = parseInt(req.query.price);
-    let year = parseInt(req.query.year);
-    const result = showSearchVehicleByMakePriceYearFuel(
+    let makeFuelType = req.query.make_fuel_type || null;
+    let price = req.query.price ? parseInt(req.query.price) : 0;
+    let year = req.query.year ? parseInt(req.query.year) : 0;
+    const result = await showSearchVehicleByMakePriceYearFuel(
       makeFuelType,
       price,
       year,
