@@ -137,7 +137,6 @@ export const getVehicleByFuelType = async (db, fuelType) => {
         location,
         status
         FROM vehicle
-        ORDER BY update_at DESC
         WHERE LOWER(TRIM(fuel_type)) = LOWER(TRIM($1))
     `,
     [fuelType],

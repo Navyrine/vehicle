@@ -70,7 +70,7 @@ export const presentSearchVehicleByMakePriceYearFuel = async (
 
 export const presentVehicleByFuelType = async (req, res, next) => {
   try {
-    let fuelType = String(req.quey.fuel_type);
+    let fuelType = String(req.query.fuel_type);
     const result = await showVehicleByFuelType(fuelType);
 
     return res.status(200).json({
