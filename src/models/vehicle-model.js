@@ -44,7 +44,7 @@ export const getVehicleById = async (db, vehicleId) => {
     location,
     status
     FROM vehicle
-    WHERE vehicle_id = $1    
+    WHERE LOWER(TRIM(vehicle_id)) = LOWER(TRIM($1))    
 `,
     [vehicleId],
   );

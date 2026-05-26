@@ -32,6 +32,8 @@ export const showVehicle = async (limit, offset) => {
 };
 
 export const showVehicleById = async (vehicleId) => {
+  vehicleId = vehicleId.toLowerCase().trim();
+
   const result = await getVehicleById(pool, vehicleId);
   if (!result) {
     throw new ResponseError(404, "Vehicle data not found");

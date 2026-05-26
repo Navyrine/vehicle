@@ -32,7 +32,7 @@ export const presentVehicle = async (req, res, next) => {
 
 export const presentVehicleById = async (req, res, next) => {
   try {
-    let vehicleId = parseInt(req.params.vehicle_id);
+    let vehicleId = String(req.params.vehicle_id);
     const result = await showVehicleById(vehicleId);
 
     return res.status(200).json({
