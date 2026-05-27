@@ -236,7 +236,7 @@ export const updateVehicle = async (db, data, vehicleId) => {
       price,
       condition,
       transmission,
-      fuelType,
+      fuel_type,
       color,
       location,
       status,

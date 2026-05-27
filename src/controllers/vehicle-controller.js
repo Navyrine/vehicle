@@ -100,7 +100,7 @@ export const newVehicle = async (req, res, next) => {
 
 export const editVehicle = async (req, res, next) => {
   try {
-    let vehicleId = parseInt(req.params.vehicle_id);
+    let vehicleId = String(req.params.vehicle_id);
     const body = req.body;
 
     await changeVehicle(body, vehicleId);
