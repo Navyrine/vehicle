@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import { pool } from "../config/database.js";
 import { ResponseError } from "../error/ResponseError.js";
 import { validation } from "../validations/validator.js";
@@ -133,7 +135,8 @@ export const changeVehicle = async (request, vehicleId) => {
       throw new ResponseError(404, "Vehicle data not found");
     }
 
-    const date = new Date();
+    const date = dayjs();
+    const formattedDate = date.format("YYYY-MM-DD HH:mm:ss");
     const data = {
       name: vehicle.name ?? existingVehicle.name,
       make: vehicle.make ?? existingVehicle.make,
@@ -147,7 +150,7 @@ export const changeVehicle = async (request, vehicleId) => {
       color: vehicle.color ?? existingVehicle.color,
       location: vehicle.location ?? existingVehicle.location,
       status: vehicle.status ?? existingVehicle.status,
-      update_at: date.toISOString(),
+      update_at: formattedDate,
     };
 
     await updateVehicle(client, data, vehicleId);
