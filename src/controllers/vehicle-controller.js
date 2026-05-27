@@ -116,7 +116,7 @@ export const editVehicle = async (req, res, next) => {
 
 export const eraseVehicleData = async (req, res, next) => {
   try {
-    let vehicleId = parseInt(req.params.vehicle_id);
+    let vehicleId = String(req.params.vehicle_id);
 
     await removeVehicle(vehicleId);
 

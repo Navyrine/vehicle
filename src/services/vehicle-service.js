@@ -168,7 +168,9 @@ export const removeVehicle = async (vehicleId) => {
   const client = await pool.connect();
 
   try {
-    const existingVehicle = await getVehicleById(vehicleId);
+    await client.query("BEGIN");
+
+    const existingVehicle = await getVehicleById(client, vehicleId);
     if (!existingVehicle) {
       throw new ResponseError(404, "Vehicle data not found");
     }
