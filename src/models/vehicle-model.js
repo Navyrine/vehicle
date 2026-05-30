@@ -107,10 +107,14 @@ export const searchVehicleByMakePriceYearFuel = async (
             $1::text IS NULL OR
             to_tsvector('simple', 
                 coalesce(make, '') || ' ' || coalesce(fuel_type, '')
-            ) @@ plainto_tsquery($1::text)
-        ) AND
-        price >= $2 AND
-        year >= $3
+            ) @@ plainto_tsquery('simple', $1)
+        ) 
+        AND (
+          $2::numeric IS NULL OR price >= $2
+        )
+        AND (
+          $3::numeric IS NULL OR year >= $3
+        )
     `,
     [makeFuelType, price, year],
   );
@@ -140,6 +144,37 @@ export const getVehicleByFuelType = async (db, fuelType) => {
         WHERE LOWER(TRIM(fuel_type)) = LOWER(TRIM($1))
     `,
     [fuelType],
+  );
+  const result = query.rows;
+
+  return result;
+};
+
+export const getVehicleByMakeModelLocation = async (db, parameter) => {
+  const query = await db.query(
+    `
+    SELECT
+    vehicle_id,
+    name,
+    make,
+    model,
+    year,
+    mileage,
+    price,
+    condition,
+    transmission,
+    fuel_type,
+    color,
+    location,
+    status,
+    similarity(LOWER(TRIM(make || ' ' || model || ' ' || location)), $1) AS score
+    FROM vehicle
+    WHERE 
+      LOWER(TRIM(make || ' ' || model || ' ' || location)) % $1
+    ORDER BY score DESC
+    LIMIT 10
+`,
+    [parameter],
   );
   const result = query.rows;
 

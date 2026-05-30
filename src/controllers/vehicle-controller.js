@@ -4,6 +4,7 @@ import {
   showTotalVehicle,
   showSearchVehicleByMakePriceYearFuel,
   showVehicleByFuelType,
+  showVehicleByMakeModelLocation,
   addVehicle,
   changeVehicle,
   removeVehicle,
@@ -51,8 +52,8 @@ export const presentSearchVehicleByMakePriceYearFuel = async (
 ) => {
   try {
     let makeFuelType = req.query.make_fuel_type || null;
-    let price = req.query.price ? parseInt(req.query.price) : 0;
-    let year = req.query.year ? parseInt(req.query.year) : 0;
+    let price = req.query.price ? Number(req.query.price) : null;
+    let year = req.query.year ? Number(req.query.year) : null;
     const result = await showSearchVehicleByMakePriceYearFuel(
       makeFuelType,
       price,
@@ -72,6 +73,20 @@ export const presentVehicleByFuelType = async (req, res, next) => {
   try {
     let fuelType = String(req.query.fuel_type);
     const result = await showVehicleByFuelType(fuelType);
+
+    return res.status(200).json({
+      status_code: 200,
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const presentVehicleByMakeModelLocation = async (req, res, next) => {
+  try {
+    const params = req.query.parameter;
+    const result = await showVehicleByMakeModelLocation(params);
 
     return res.status(200).json({
       status_code: 200,

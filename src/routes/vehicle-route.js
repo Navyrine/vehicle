@@ -6,6 +6,7 @@ import {
   presentVehicleById,
   presentSearchVehicleByMakePriceYearFuel,
   presentVehicleByFuelType,
+  presentVehicleByMakeModelLocation,
   newVehicle,
   editVehicle,
   eraseVehicleData,
@@ -16,6 +17,10 @@ export const vehicleRouter = express.Router();
 vehicleRouter.get("/listings", presentVehicle);
 vehicleRouter.get("/filters", presentVehicleByFuelType);
 vehicleRouter.get("/listings/search", presentSearchVehicleByMakePriceYearFuel);
+vehicleRouter.get(
+  "/listings/search/suggest",
+  presentVehicleByMakeModelLocation,
+);
 vehicleRouter.get("/listings/:vehicle_id", presentVehicleById);
 vehicleRouter.post("/listings", idempotencyMiddleware, newVehicle);
 vehicleRouter.patch("/listings/:vehicle_id", editVehicle);

@@ -14,6 +14,7 @@ import {
   getTotalVehicle,
   getVehicleByFuelType,
   searchVehicleByMakePriceYearFuel,
+  getVehicleByMakeModelLocation,
   insertVehicle,
   updateVehicle,
   deleteVehicle,
@@ -74,6 +75,17 @@ export const showVehicleByFuelType = async (fuelType) => {
   const result = await getVehicleByFuelType(pool, fuelType);
   if (result.length === 0) {
     throw new ResponseError(404, "Vehicle data not found");
+  }
+
+  return result;
+};
+
+export const showVehicleByMakeModelLocation = async (parameter) => {
+  parameter = parameter.toLowerCase().trim();
+
+  const result = await getVehicleByMakeModelLocation(pool, parameter);
+  if (result.length === 0) {
+    return [];
   }
 
   return result;
