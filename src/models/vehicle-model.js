@@ -166,13 +166,12 @@ export const getVehicleByMakeModelLocation = async (db, parameter) => {
     fuel_type,
     color,
     location,
-    status,
-    similarity(LOWER(TRIM(make || ' ' || model || ' ' || location)), $1) AS score
+    status
     FROM vehicle
     WHERE 
-      LOWER(TRIM(make || ' ' || model || ' ' || location)) % $1
-    ORDER BY score DESC
-    LIMIT 10
+    LOWER(make) ILIKE '%' || LOWER($1) || '%'
+    OR LOWER(model) ILIKE '%' || LOWER($1) || '%'
+    OR LOWER(location) ILIKE '%' || LOWER($1) || '%'
 `,
     [parameter],
   );
