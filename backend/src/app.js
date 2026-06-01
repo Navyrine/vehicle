@@ -10,7 +10,7 @@ export const app = express();
 
 app.use(
   cors({
-    origin: true,
+    origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
