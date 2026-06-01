@@ -63,7 +63,7 @@ export const showSearchVehicleByMakePriceYearFuel = async (
     year,
   );
   if (result.length === 0) {
-    throw new ResponseError(404, "Vehicle data not found");
+    return [];
   }
 
   return result;
@@ -74,7 +74,7 @@ export const showVehicleByFuelType = async (fuelType) => {
 
   const result = await getVehicleByFuelType(pool, fuelType);
   if (result.length === 0) {
-    throw new ResponseError(404, "Vehicle data not found");
+    return [];
   }
 
   return result;
