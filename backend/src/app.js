@@ -13,7 +13,12 @@ app.use(
     origin: "*",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "Set-Cookie"],
+    allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "Set-Cookie",
+      "idempotency-key",
+    ],
   }),
 );
 app.use(express.json());
